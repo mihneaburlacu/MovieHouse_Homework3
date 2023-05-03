@@ -15,15 +15,16 @@ public class ManagerController {
     private ManagerView managerView;
     private User manager;
 
-    public ManagerController(User user) {
+    public ManagerController(User user, String language) {
         this.manager = user;
-        this.managerView = new ManagerView(user);
+        this.managerView = new ManagerView(user, language);
         managerView.setVisible(true);
 
         managerView.addViewButton(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FilterAndViewController filterAndViewController = new FilterAndViewController();
+                String language = managerView.returnLanguage();
+                FilterAndViewController filterAndViewController = new FilterAndViewController(language);
             }
         });
     }

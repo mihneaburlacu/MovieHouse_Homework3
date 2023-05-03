@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import model.Comparators.MovieComparator;
 import model.DBContextMovie;
 import model.Movie;
+import model.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import view.ViewAndFilterView;
@@ -25,8 +26,8 @@ public class FilterAndViewController {
     private ViewAndFilterView viewAndFilterView;
     private static final DBContextMovie dbContextMovie = new DBContextMovie();
 
-    public FilterAndViewController() {
-        this.viewAndFilterView = new ViewAndFilterView();
+    public FilterAndViewController(String language) {
+        this.viewAndFilterView = new ViewAndFilterView(language);
         viewAndFilterView.setVisible(true);
 
         viewAndFilterView.addXmlButton(new ActionListener() {
@@ -142,16 +143,18 @@ public class FilterAndViewController {
 
                 try{
                     FileWriter fileWriter = new FileWriter("Movies.json");
-                    Gson gson = new Gson();
+                    //Gson gson = new Gson();
 
                     for(Movie movie : movies) {
-                        gson.toJson(movie, fileWriter);
+                        //gson.toJson(movie, fileWriter);
+                        fileWriter.append(movie.toString());
                         fileWriter.append("\n");
                     }
 
                     fileWriter.close();
                 }catch(Exception exp) {
                     System.out.println("Error while creating .json file");
+                    exp.printStackTrace();
                 }
             }
         });
@@ -186,11 +189,15 @@ public class FilterAndViewController {
                 String got = viewAndFilterView.getFilterTextField();
                 List<Movie> list = new ArrayList<>();
 
-                if(select == "TYPE") {
+                if(select == "TYPE" || select.equalsIgnoreCase("Typ") || select.equalsIgnoreCase("Tip")) {
                     list = dbContextMovie.findAllMovies(dbContextMovie.createFindByTypeQuery(got));
                 }
-                else if(select == "CATEGORY"){
+                else if(select == "CATEGORY" || select.equalsIgnoreCase("Kategorie") || select.equalsIgnoreCase("Categorie")){
                     list = dbContextMovie.findAllMovies(dbContextMovie.createFindByCategoryQuery(got));
+                }
+                else if(select.equalsIgnoreCase("Name") || select.equalsIgnoreCase("Nume")) {
+                    Movie movie = dbContextMovie.findMovie(dbContextMovie.createFindQueryByName(got));
+                    list.add(movie);
                 }
                 else {
                     list = dbContextMovie.findAllMovies(dbContextMovie.createFindByYearQuery(Integer.parseInt(got)));

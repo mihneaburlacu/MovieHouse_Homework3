@@ -9,9 +9,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import javax.swing.table.DefaultTableModel;
 
-public class AdministratorView extends JFrame{
+public class AdministratorView extends JFrame implements ItemListener {
 
     private JPanel contentPane;
     private JLabel welcomeLabel;
@@ -29,10 +33,43 @@ public class AdministratorView extends JFrame{
     private JButton deleteButton;
     private JButton viewButton;
     private JButton updateButton;
+    private JLabel createLabel;
+    private JLabel idInsertLabel;
+    private JLabel nameInsertLabel;
+    private JLabel usernameInsertLabel;
+    private JLabel passwordInsertLabel;
+    private JLabel lblRole;
+    private JLabel readLabel;
+    private JLabel readUsernameLabel;
+    private JLabel readIDLabel;
+    private JLabel updateLabel;
+    private JLabel readIDLabel_1;
+    private JLabel nameInsertLabel_1;
+    private JLabel usernameInsertLabel_1;
+    private JLabel passwordInsertLabel_1;
+    private JLabel lblRole_1;
+    private JLabel deleteLabel;
+    private JLabel readUsernameLabel_1;
+    private JLabel readIDLabel_2;
+    private JLabel viewLabel;
+    private String[][] text;
+    private JComboBox languageComboBox;
 
+    public AdministratorView(User administrator, String lang) {
+        text = getTextFromFile();
 
-    public AdministratorView(User administrator) {
-        setTitle("MovieHouse - Administrator");
+        int nrLanguage;
+        if(lang.equalsIgnoreCase("English")) {
+            nrLanguage = 0;
+        }
+        else if(lang.equalsIgnoreCase("Romanian")) {
+            nrLanguage = 1;
+        }
+        else {
+            nrLanguage = 2;
+        }
+
+        setTitle(text[nrLanguage][0]);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 685, 575);
         contentPane = new JPanel();
@@ -40,9 +77,9 @@ public class AdministratorView extends JFrame{
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        welcomeLabel = new JLabel("Welcome, ");
+        welcomeLabel = new JLabel(text[nrLanguage][1]);
         welcomeLabel.setFont(new Font("Times New Roman", Font.BOLD, 24));
-        welcomeLabel.setBounds(250, 10, 108, 37);
+        welcomeLabel.setBounds(225, 10, 135, 37);
         contentPane.add(welcomeLabel);
 
         insertUsernameLabel = new JLabel("");
@@ -51,9 +88,9 @@ public class AdministratorView extends JFrame{
         insertUsernameLabel.setForeground(Color.GREEN);
         contentPane.add(insertUsernameLabel);
 
-        JLabel createLabel = new JLabel("Create user:");
+        createLabel = new JLabel(text[nrLanguage][2]);
         createLabel.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        createLabel.setBounds(10, 50, 108, 22);
+        createLabel.setBounds(10, 50, 160, 22);
         contentPane.add(createLabel);
 
         createTable = new JTable();
@@ -69,44 +106,44 @@ public class AdministratorView extends JFrame{
         createTable.setBounds(20, 115, 420, 16);
         contentPane.add(createTable);
 
-        createButton = new JButton("Create");
+        createButton = new JButton(text[nrLanguage][3]);
         createButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         createButton.setBounds(485, 100, 115, 29);
         contentPane.add(createButton);
 
-        JLabel idInsertLabel = new JLabel("ID");
+        idInsertLabel = new JLabel("ID");
         idInsertLabel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         idInsertLabel.setBounds(36, 85, 45, 13);
         contentPane.add(idInsertLabel);
 
-        JLabel nameInsertLabel = new JLabel("Name");
+        nameInsertLabel = new JLabel(text[nrLanguage][4]);
         nameInsertLabel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         nameInsertLabel.setBounds(124, 85, 45, 13);
         contentPane.add(nameInsertLabel);
 
-        JLabel usernameInsertLabel = new JLabel("Username");
+        usernameInsertLabel = new JLabel(text[nrLanguage][5]);
         usernameInsertLabel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         usernameInsertLabel.setBounds(189, 85, 74, 13);
         contentPane.add(usernameInsertLabel);
 
-        JLabel passwordInsertLabel = new JLabel("Password");
+        passwordInsertLabel = new JLabel(text[nrLanguage][6]);
         passwordInsertLabel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         passwordInsertLabel.setBounds(284, 85, 74, 13);
         contentPane.add(passwordInsertLabel);
 
-        JLabel lblRole = new JLabel("Role");
+        lblRole = new JLabel(text[nrLanguage][7]);
         lblRole.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         lblRole.setBounds(368, 85, 45, 13);
         contentPane.add(lblRole);
 
-        JLabel readLabel = new JLabel("Read user:");
+        readLabel = new JLabel(text[nrLanguage][8]);
         readLabel.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        readLabel.setBounds(10, 150, 108, 22);
+        readLabel.setBounds(10, 150, 160, 22);
         contentPane.add(readLabel);
 
-        JLabel readUsernameLabel = new JLabel("Enter the username: ");
-        readUsernameLabel.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        readUsernameLabel.setBounds(36, 175, 152, 22);
+        readUsernameLabel = new JLabel(text[nrLanguage][9]);
+        readUsernameLabel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        readUsernameLabel.setBounds(36, 175, 155, 22);
         contentPane.add(readUsernameLabel);
 
         usernameReadTextField = new JTextField();
@@ -115,7 +152,7 @@ public class AdministratorView extends JFrame{
         contentPane.add(usernameReadTextField);
         usernameReadTextField.setColumns(10);
 
-        JLabel readIDLabel = new JLabel("Enter ID: ");
+        readIDLabel = new JLabel(text[nrLanguage][10]);
         readIDLabel.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         readIDLabel.setBounds(36, 206, 152, 22);
         contentPane.add(readIDLabel);
@@ -126,14 +163,14 @@ public class AdministratorView extends JFrame{
         idReadTextField.setBounds(215, 206, 143, 19);
         contentPane.add(idReadTextField);
 
-        readButton = new JButton("Read");
+        readButton = new JButton(text[nrLanguage][11]);
         readButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         readButton.setBounds(485, 184, 115, 29);
         contentPane.add(readButton);
 
-        JLabel updateLabel = new JLabel("Update user:");
+        updateLabel = new JLabel(text[nrLanguage][12]);
         updateLabel.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        updateLabel.setBounds(10, 263, 108, 22);
+        updateLabel.setBounds(10, 263, 160, 22);
         contentPane.add(updateLabel);
 
         readTable = new JTable();
@@ -162,7 +199,7 @@ public class AdministratorView extends JFrame{
         updateTable.setBounds(20, 347, 420, 16);
         contentPane.add(updateTable);
 
-        JLabel readIDLabel_1 = new JLabel("Enter ID: ");
+        readIDLabel_1 = new JLabel(text[nrLanguage][13]);
         readIDLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         readIDLabel_1.setBounds(36, 297, 152, 22);
         contentPane.add(readIDLabel_1);
@@ -173,42 +210,42 @@ public class AdministratorView extends JFrame{
         updateIDTextField.setBounds(215, 301, 143, 19);
         contentPane.add(updateIDTextField);
 
-        JLabel nameInsertLabel_1 = new JLabel("Name");
+        nameInsertLabel_1 = new JLabel(text[nrLanguage][14]);
         nameInsertLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         nameInsertLabel_1.setBounds(47, 329, 45, 13);
         contentPane.add(nameInsertLabel_1);
 
-        JLabel usernameInsertLabel_1 = new JLabel("Username");
+        usernameInsertLabel_1 = new JLabel(text[nrLanguage][15]);
         usernameInsertLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         usernameInsertLabel_1.setBounds(143, 329, 74, 13);
         contentPane.add(usernameInsertLabel_1);
 
-        JLabel passwordInsertLabel_1 = new JLabel("Password");
+        passwordInsertLabel_1 = new JLabel(text[nrLanguage][16]);
         passwordInsertLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         passwordInsertLabel_1.setBounds(238, 329, 74, 13);
         contentPane.add(passwordInsertLabel_1);
 
-        JLabel lblRole_1 = new JLabel("Role");
+        lblRole_1 = new JLabel(text[nrLanguage][17]);
         lblRole_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         lblRole_1.setBounds(356, 329, 45, 13);
         contentPane.add(lblRole_1);
 
-        updateButton = new JButton("Update");
+        updateButton = new JButton(text[nrLanguage][18]);
         updateButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         updateButton.setBounds(485, 313, 115, 29);
         contentPane.add(updateButton);
 
-        JLabel deleteLabel = new JLabel("Delete user:");
+        deleteLabel = new JLabel(text[nrLanguage][19]);
         deleteLabel.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        deleteLabel.setBounds(10, 383, 108, 22);
+        deleteLabel.setBounds(10, 383, 160, 22);
         contentPane.add(deleteLabel);
 
-        JLabel readUsernameLabel_1 = new JLabel("Enter the username: ");
-        readUsernameLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        readUsernameLabel_1.setBounds(36, 413, 152, 22);
+        readUsernameLabel_1 = new JLabel(text[nrLanguage][20]);
+        readUsernameLabel_1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        readUsernameLabel_1.setBounds(36, 413, 154, 22);
         contentPane.add(readUsernameLabel_1);
 
-        JLabel readIDLabel_2 = new JLabel("Enter ID: ");
+        readIDLabel_2 = new JLabel(text[nrLanguage][21]);
         readIDLabel_2.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         readIDLabel_2.setBounds(36, 439, 152, 22);
         contentPane.add(readIDLabel_2);
@@ -225,20 +262,27 @@ public class AdministratorView extends JFrame{
         idDeleteTextField.setBounds(215, 443, 143, 19);
         contentPane.add(idDeleteTextField);
 
-        deleteButton = new JButton("Delete");
+        deleteButton = new JButton(text[nrLanguage][22]);
         deleteButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         deleteButton.setBounds(485, 416, 115, 29);
         contentPane.add(deleteButton);
 
-        JLabel viewLabel = new JLabel("View all or filter all users:");
+        viewLabel = new JLabel(text[nrLanguage][23]);
         viewLabel.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        viewLabel.setBounds(10, 489, 220, 22);
+        viewLabel.setBounds(10, 489, 270, 22);
         contentPane.add(viewLabel);
 
-        viewButton = new JButton("View");
+        viewButton = new JButton(text[nrLanguage][24]);
         viewButton.setFont(new Font("Times New Roman", Font.PLAIN, 18));
         viewButton.setBounds(485, 492, 115, 29);
         contentPane.add(viewButton);
+
+        languageComboBox = new JComboBox();
+        languageComboBox.setModel(new DefaultComboBoxModel(new String[] {"English", "Romanian", "Deutsch"}));
+        languageComboBox.setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        languageComboBox.setBounds(560, 10, 109, 21);
+        contentPane.add(languageComboBox);
+        languageComboBox.addItemListener(this);
 
         //pAdministrator = new PAdministrator(administrator, this);
 
@@ -330,5 +374,120 @@ public class AdministratorView extends JFrame{
 
     public void showMessage(String string) {
         JOptionPane.showMessageDialog(null, string);
+    }
+
+    public String[][] getTextFromFile() {
+        String[][] matrix = new String[3][25];
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("src/Files/Administrator.csv"));
+            int i = 0;
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                String[] fields;
+
+                fields = line.split(",");
+                for (int j = 0; j < 25; j++) {
+                    matrix[i][j] = fields[j];
+                }
+
+                i++;
+            }
+        } catch(Exception exp){
+            exp.printStackTrace();
+            System.out.println("Exception while reading from CSV File");
+        }
+
+        return matrix;
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        String language = (String) languageComboBox.getSelectedItem();
+        if(language.equalsIgnoreCase("English")) {
+            setTitle(text[0][0]);
+            welcomeLabel.setText(text[0][1]);
+            createLabel.setText(text[0][2]);
+            createButton.setText(text[0][3]);
+            nameInsertLabel.setText(text[0][4]);
+            usernameInsertLabel.setText(text[0][5]);
+            passwordInsertLabel.setText(text[0][6]);
+            lblRole.setText(text[0][7]);
+            readLabel.setText(text[0][8]);
+            readUsernameLabel.setText(text[0][9]);
+            readIDLabel.setText(text[0][10]);
+            readButton.setText(text[0][11]);
+            updateLabel.setText(text[0][12]);
+            readIDLabel_1.setText(text[0][13]);
+            nameInsertLabel_1.setText(text[0][14]);
+            usernameInsertLabel_1.setText(text[0][15]);
+            passwordInsertLabel_1.setText(text[0][16]);
+            lblRole_1.setText(text[0][17]);
+            updateButton.setText(text[0][18]);
+            deleteLabel.setText(text[0][19]);
+            readUsernameLabel_1.setText(text[0][20]);
+            readIDLabel_2.setText(text[0][21]);
+            deleteButton.setText(text[0][22]);
+            viewLabel.setText(text[0][23]);
+            viewButton.setText(text[0][24]);
+        }
+        else if(language.equalsIgnoreCase("Romanian")) {
+            setTitle(text[1][0]);
+            welcomeLabel.setText(text[1][1]);
+            createLabel.setText(text[1][2]);
+            createButton.setText(text[1][3]);
+            nameInsertLabel.setText(text[1][4]);
+            usernameInsertLabel.setText(text[1][5]);
+            passwordInsertLabel.setText(text[1][6]);
+            lblRole.setText(text[1][7]);
+            readLabel.setText(text[1][8]);
+            readUsernameLabel.setText(text[1][9]);
+            readIDLabel.setText(text[1][10]);
+            readButton.setText(text[1][11]);
+            updateLabel.setText(text[1][12]);
+            readIDLabel_1.setText(text[1][13]);
+            nameInsertLabel_1.setText(text[1][14]);
+            usernameInsertLabel_1.setText(text[1][15]);
+            passwordInsertLabel_1.setText(text[1][16]);
+            lblRole_1.setText(text[1][17]);
+            updateButton.setText(text[1][18]);
+            deleteLabel.setText(text[1][19]);
+            readUsernameLabel_1.setText(text[1][20]);
+            readIDLabel_2.setText(text[1][21]);
+            deleteButton.setText(text[1][22]);
+            viewLabel.setText(text[1][23]);
+            viewButton.setText(text[1][24]);
+        }
+        else{
+            setTitle(text[1][0]);
+            welcomeLabel.setText(text[2][1]);
+            createLabel.setText(text[2][2]);
+            createButton.setText(text[2][3]);
+            nameInsertLabel.setText(text[2][4]);
+            usernameInsertLabel.setText(text[2][5]);
+            passwordInsertLabel.setText(text[2][6]);
+            lblRole.setText(text[2][7]);
+            readLabel.setText(text[2][8]);
+            readUsernameLabel.setText(text[2][9]);
+            readIDLabel.setText(text[2][10]);
+            readButton.setText(text[2][11]);
+            updateLabel.setText(text[2][12]);
+            readIDLabel_1.setText(text[2][13]);
+            nameInsertLabel_1.setText(text[2][14]);
+            usernameInsertLabel_1.setText(text[2][15]);
+            passwordInsertLabel_1.setText(text[2][16]);
+            lblRole_1.setText(text[2][17]);
+            updateButton.setText(text[2][18]);
+            deleteLabel.setText(text[2][19]);
+            readUsernameLabel_1.setText(text[2][20]);
+            readIDLabel_2.setText(text[2][21]);
+            deleteButton.setText(text[2][22]);
+            viewLabel.setText(text[2][23]);
+            viewButton.setText(text[2][24]);
+        }
+    }
+
+    public String returnLanguage() {
+        return languageComboBox.getSelectedItem().toString();
     }
 }

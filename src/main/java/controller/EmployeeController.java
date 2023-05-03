@@ -8,6 +8,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 import view.AdministratorView;
 import view.EmployeeView;
 
@@ -23,15 +24,16 @@ public class EmployeeController {
     private User employee;
     private static final DBContextMovie dbContextMovie = new DBContextMovie();
 
-    public EmployeeController(User user) {
+    public EmployeeController(User user, String language) {
         this.employee = user;
-        this.employeeView = new EmployeeView(employee);
+        this.employeeView = new EmployeeView(employee, language);
         this.employeeView.setVisible(true);
 
         employeeView.addViewButton(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FilterAndViewController filterAndViewController = new FilterAndViewController();
+                String language = employeeView.returnLanguage();
+                FilterAndViewController filterAndViewController = new FilterAndViewController(language);
             }
         });
 
@@ -136,6 +138,30 @@ public class EmployeeController {
                 ChartFrame frame = new ChartFrame("Movies Released by Year", chart);
                 frame.pack();
                 frame.setVisible(true);
+
+                Map<String, Integer> categoryCounts2 = new HashMap<>();
+                for (Movie movie : movies) {
+                    String category = movie.getCategory();
+                    categoryCounts2.put(category, categoryCounts2.getOrDefault(category, 0) + 1);
+                }
+
+                DefaultPieDataset dataset2 = new DefaultPieDataset();
+                for (String category : categoryCounts2.keySet()) {
+                    int count = categoryCounts2.get(category);
+                    dataset2.setValue(category, count);
+                }
+
+                JFreeChart chart2 = ChartFactory.createPieChart(
+                        "Movie Categories",
+                        dataset2,
+                        true, // legend
+                        true, // tooltips
+                        false // urls
+                );
+
+                ChartFrame frame2 = new ChartFrame("Movie Categories", chart2);
+                frame2.pack();
+                frame2.setVisible(true);
             }
         });
     }

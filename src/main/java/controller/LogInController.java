@@ -26,17 +26,19 @@ public class LogInController {
                 String query = dbContextUser.createFindQueryByUsernameAndPassword(username, password);
                 User user = dbContextUser.findUser(query);
 
+                String lang = logInView.returnLanguage();
+
                 if(user != null) {
                     Role role = user.getRole();
 
                     if(role == Role.ADMINISTRATOR) {
-                        AdministratorController administratorController = new AdministratorController(user);
+                        AdministratorController administratorController = new AdministratorController(user, lang);
                     }
                     else if(role == Role.EMPLOYEE) {
-                        EmployeeController employeeController = new EmployeeController(user);
+                        EmployeeController employeeController = new EmployeeController(user, lang);
                     }
                     else {
-                        ManagerController managerController = new ManagerController(user);
+                        ManagerController managerController = new ManagerController(user, lang);
                     }
                 }
                 else {

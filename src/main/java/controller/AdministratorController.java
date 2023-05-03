@@ -15,9 +15,9 @@ public class AdministratorController {
     private User administrator;
     private static final DBContextUser dbContextUser = new DBContextUser();
 
-    public AdministratorController(User user) {
+    public AdministratorController(User user, String lang) {
         this.administrator = user;
-        this.administratorView = new AdministratorView(administrator);
+        this.administratorView = new AdministratorView(administrator, lang);
         this.administratorView.setVisible(true);
 
         administratorView.addCreateListener(new ActionListener() {
@@ -91,7 +91,9 @@ public class AdministratorController {
         administratorView.addViewAllListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                allView = new AllView();
+                String lang = administratorView.returnLanguage();
+
+                allView = new AllView(lang);
                 allView.setVisible(true);
 
                 List<User> list = dbContextUser.findAllUsers();
@@ -111,7 +113,7 @@ public class AdministratorController {
                     public void actionPerformed(ActionEvent e) {
                         List<User> roleList = dbContextUser.findUsersByRole(allView.getRoleFilter());
 
-                        allView.resetTable();
+                        allView.resetTable(lang);
 
                         int nr = 1;
                         for(User user : roleList) {

@@ -89,7 +89,7 @@ public class Movie extends Observable {
 
     @Override
     public String toString() {
-        return "Movie{" +
+        return "{" +
                 "name=" + name +
                 ", type=" + type +
                 ", category=" + category +
